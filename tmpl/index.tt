@@ -22,15 +22,43 @@
         <hr>
         
         <div ng-show="result.zcr">
-        結果: 
-            <div>{{result.title}}</div>
             <div>
-                <a href="{{result.link_url}}" target="_blank">
-                    <img src="{{result.image_url}}">
-                </a>
+                <h4>結果</h4> 
+                <div>{{result.title}}</div>
+                <div>
+                    <a href="{{result.link_url}}" target="_blank">
+                        <img src="{{result.image_url}}">
+                    </a>
+                </div>
+                <div>
+                    ZCR = <span>{{result.zcr | number}}</span>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <h4>ZCRが近い曲</h4>
             </div>
             <div>
-                ZCR = <span>{{result.zcr | number}}</span>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>タイトル</td>
+                            <td>ZCR</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="song in result.resembles">
+                            <td>
+                                <a href="{{song.link_url}}" target="_blank">
+                                    <img src="{{song.image_url}}">
+                                </a>
+                            </td>
+                            <td>{{song.title}}</td>
+                            <td>{{song.zcr}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

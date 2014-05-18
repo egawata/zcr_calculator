@@ -56,7 +56,7 @@ sub get_zcr_from_youtube {
             title       => decode_utf8($row->title),
             image_url   => $row->image_url,
             link_url    => 'https://www.youtube.com/watch?v=' . $video_id,
-            resembles   => get_resemble_songs($c, $row->zcr),
+            resembles   => get_resemble_songs($c, $row->id, $row->zcr),
         };
     }
 
@@ -83,18 +83,20 @@ sub get_zcr_from_youtube {
             my $json = decode_json($http_res->content);
             my $snippet = $json->{items}->[0]->{snippet};
 
-            $res{zcr} = get_zcr($wavfile);
-            $res{video_id} = $video_id;
-            $res{image_url} = $snippet->{thumbnails}{default}{url};
-            $res{link_url}  = 'https://www.youtube.com/watch?v=' . $video_id;
-            $res{title}     = $snippet->{title};
-            $res{resembles} = get_resemble_songs($c, $res{zcr});
+            %res = (
+                zcr         => get_zcr($wavfile),
+                video_id    => $video_id,
+                image_url   => $snippet->{thumbnails}{default}{url},
+                link_url    => 'https://www.youtube.com/watch?v=' . $video_id,
+                title       => $snippet->{title} // '',
+                resembles   => get_resemble_songs($c, 0, $res{zcr}),
+            );
 
             $c->db->insert('zcr' => {
                 site_id     => 1,
                 audio_id    => $video_id,
                 zcr         => $res{zcr},
-                title       => $res{title},
+                title       => $res{title} // '',
                 image_url   => $res{image_url},
             });
 
@@ -129,7 +131,40 @@ sub extract_video_id {
 
 
 sub get_resemble_songs {
-    return [];
+    my ($c, $id, $zcr) = @_;
+
+    my @songs = ();
+    my @rows = $c->db->search_by_sql(q{
+        SELECT *
+          FROM zcr
+         WHERE id != ?
+      ORDER BY abs(? - zcr)
+         LIMIT ?
+    }, [ $id, $zcr, 5 ]);
+
+    for my $row (@rows) {
+        debugf( $row->id );
+        push @songs, {
+            zcr         => $row->zcr,
+            video_id    => $row->audio_id,
+            image_url   => $row->image_url,
+            link_url    => get_link_url($row->site_id, $row->audio_id),
+            title       => decode_utf8($row->title),
+        };
+    }
+
+    return [@songs];
 }
+
+sub get_link_url {
+    my ($site_id, $audio_id) = @_;
+
+    if ( $site_id == 1 ) {
+        return "https://www.youtube.com/watch?v=$audio_id";
+    }
+    
+    return undef;
+}
+
 
 1;
