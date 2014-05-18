@@ -5,12 +5,18 @@
 <h1>ZCR Calculator</h1>
 <div ng-app="ZcrCalculator">
     <div>
-    楽曲のZCRを計算します。以下のサイトのURLが有効です。
-    <ul>
-        <li>YouTube</li>
-        <li>Terminal MP3 Download</li>
-    </ul>
+        <p>
+            楽曲のZCR(Zero Crossing Rate)を計算します。以下のサイトのURLが有効です。
+        </p>
+        <ul>
+            <li><a href="https://www.youtube.com/">YouTube</a> (https://www.youtube.com/watch?v=...)</li>
+            <li><a href="http://mp3-terminal.com/">Terminal MP3 Download</a> (http://mp3-terminal.com/mp3_.../)</li>
+        </ul>
     </div>
+    <div>
+        また、ZCRが近い楽曲を5曲表示します。もしかしたら似ている曲が見つかるかもしれません。
+    </div>
+    <hr>
     <div ng-controller="FormController">
         <form name="zcr_form" role="form">
             <div class="form-group">

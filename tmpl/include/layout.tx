@@ -47,7 +47,12 @@
             <: block content -> { } :>
         </div>
         <footer class="footer">
-            Powered by <a href="http://amon.64p.org/">Amon2</a>
+            <div>
+                作成: <a href="http://d.hatena.ne.jp/taegawa/">えがわた</a>
+            </div>
+            <div>
+                Powered by <a href="http://amon.64p.org/">Amon2</a>
+            </div>
         </footer>
     </div>
 </body>
