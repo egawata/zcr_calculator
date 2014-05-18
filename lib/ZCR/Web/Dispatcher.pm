@@ -46,7 +46,7 @@ sub get_zcr_from_youtube {
     my $ret = system('youtube-dl', 
         '--audio-format', 'wav',
         '--extract-audio',
-        '--output', q{'} . File::Spec->catfile($tempdir, "%(id)s.%(ext).s") . q{'},
+        '--output', File::Spec->catfile($tempdir, "%(id)s.%(ext).s"),
         $url
     );
 

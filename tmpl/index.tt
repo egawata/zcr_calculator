@@ -22,7 +22,7 @@
         <hr>
         
         <div>
-        結果: <span ng-bind="result.zcr"></span>
+        結果: <span>{{result.zcr | number}}</span>
         </div>
     </div>
 </div>
@@ -41,10 +41,10 @@
         };
 
         $scope.send_url = function(formzcr) {
-            //var csrfToken = $("input[name='csrf_token']")[0].value;
+            var csrfToken = $("input[name='csrf_token']")[0].value;
             var reqParam = { 
-                "url"           : formzcr.url
-                //"csrf_token"    : csrfToken
+                "url"           : formzcr.url,
+                "csrf_token"    : csrfToken
             };
             console.log(reqParam);
             $http.post('/get_zcr', reqParam, {
