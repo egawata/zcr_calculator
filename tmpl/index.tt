@@ -21,8 +21,15 @@
         </form>
         <hr>
         
-        <div>
-        結果: <span>{{result.zcr | number}}</span>
+        <div ng-show="result.zcr">
+        結果: 
+            <div>{{result.title}}</div>
+            <div>
+                <img src="{{result.image_url}}">
+            </div>
+            <div>
+                ZCR = <span>{{result.zcr | number}}</span>
+            </div>
         </div>
     </div>
 </div>
@@ -37,7 +44,9 @@
 
     zcrModule.controller('FormController', function($scope, $http) {
         $scope.result = { 
-            "zcr" : 0
+            "zcr"       : undefined,
+            "image_url" : "",
+            "title"     : ""
         };
 
         $scope.send_url = function(formzcr) {
@@ -52,7 +61,7 @@
                 transformRequest: transform
             }).success( function(data, status, headers, config) {
                 $scope.result = data;
-                console.log($scope.result.zcr);
+                console.log($scope.result);
             });
         };
     });

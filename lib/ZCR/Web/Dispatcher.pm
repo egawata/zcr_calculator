@@ -8,6 +8,9 @@ use Data::Dumper;
 use File::Temp qw(tempdir);
 use ZCR::Util;
 use File::Spec;
+use LWP::UserAgent;
+use URI;
+use JSON qw(decode_json);
 
 
 any '/' => sub {
@@ -22,12 +25,12 @@ post '/get_zcr' => sub {
     my $url = $c->req->param('url');
     debugf("URL: $url");
 
-    my $zcr;
+    my $res;
     if ( is_youtube_url($url) ) {
-        $zcr = get_zcr_from_youtube($url);
+        $res = get_zcr_from_youtube($url);
     }
 
-    return $c->render_json({ zcr => $zcr });
+    return $c->render_json($res);
 };
 
 
@@ -40,6 +43,8 @@ sub is_youtube_url {
 
 sub get_zcr_from_youtube {
     my ($url) = @_;
+
+    my $video_id = extract_video_id($url) or die;
     
     my $zcr;
     my $tempdir = tempdir( DIR => '/tmp' );
@@ -50,12 +55,49 @@ sub get_zcr_from_youtube {
         $url
     );
 
+    my %res = ();
+
     if ( $ret == 0 ) {
         my ($wavfile) = <$tempdir/*.wav>;
-        $zcr = get_zcr($wavfile);
+        $res{zcr} = get_zcr($wavfile);
+
+        my $ua = LWP::UserAgent->new();
+        my $res = $ua->get('https://www.googleapis.com/youtube/v3/videos'
+            . '?id=' . $video_id
+            . '&part=snippet'
+            . '&key=' . $ENV{YT_API_KEY}
+        );
+        if ( $res->is_success ) {
+            my $json = decode_json($res->content);
+            my $snippet = $json->{items}->[0]->{snippet};
+
+            $res{image_url} = $snippet->{thumbnails}{default}{url};
+            $res{title}     = $snippet->{title};
+        }
+        else {
+            warnf("Failed to retrieve video info. " . $res->error_as_HTML);
+        }
     }
 
-    return $zcr;
+    return { %res };
+}
+
+
+sub extract_video_id {
+    my ($url) = @_;
+
+    my $query = URI->new($url)->query;
+    my @params = split '&', $query;
+    my $video_id;
+    for (@params) {
+        if ( /^v=(.*)$/ ) {
+            $video_id = $1;
+            last;
+        }
+    }
+    debugf("Video ID : $video_id");
+
+    return $video_id;
 }
 
 
