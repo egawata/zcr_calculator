@@ -16,7 +16,7 @@ table {
 table {
     name 'zcr';
     pk 'id';
-    columns qw(id site_id audio_id zcr);
+    columns qw(id site_id audio_id zcr title image_url);
 };
 
 

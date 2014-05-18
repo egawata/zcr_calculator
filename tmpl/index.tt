@@ -25,7 +25,9 @@
         結果: 
             <div>{{result.title}}</div>
             <div>
-                <img src="{{result.image_url}}">
+                <a href="{{result.link_url}}" target="_blank">
+                    <img src="{{result.image_url}}">
+                </a>
             </div>
             <div>
                 ZCR = <span>{{result.zcr | number}}</span>
