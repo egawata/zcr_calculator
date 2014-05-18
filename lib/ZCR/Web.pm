@@ -16,6 +16,7 @@ __PACKAGE__->load_plugins(
     'Web::FillInFormLite',
     'Web::JSON',
     '+ZCR::Web::Plugin::Session',
+    #'Web::CSRFDefender',
 );
 
 # setup view

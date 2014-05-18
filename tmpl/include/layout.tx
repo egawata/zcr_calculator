@@ -17,6 +17,7 @@
     <script src="<: uri_for('/static/js/micro-location.js') :>"></script>
     <script src="<: uri_for('/static/js/micro_dispatcher.js') :>"></script>
     <script src="<: uri_for('/static/js/xsrf-token.js') :>"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
     <link href="<: static_file('/static/css/main.css') :>" rel="stylesheet" type="text/css" media="screen" />
     <script src="<: static_file('/static/js/main.js') :>"></script>
     <!--[if lt IE 9]>
@@ -32,9 +33,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
+                    <!--
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
+                    -->
                 </ul>
             </div>
         </div><!-- /.container -->

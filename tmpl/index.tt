@@ -1,0 +1,63 @@
+: cascade "include/layout.tx"
+
+:override content -> {
+
+<h1>ZCR Calculator</h1>
+<div ng-app="ZcrCalculator">
+    <div>
+    楽曲のZCRを計算します。以下のサイトのURLが有効です。
+    <ul>
+        <li>YouTube</li>
+        <li>Terminal MP3 Download</li>
+    </ul>
+    </div>
+    <div ng-controller="FormController">
+        <form name="zcr_form" role="form">
+            <div class="form-group">
+                <label for="inputUrl">URL</label>
+                <input type="text" class="form-control" id="inputUrl" ng-model="formzcr.url" placeholder="Enter URL">
+            </div>
+            <button ng-click="send_url(formzcr)" class="btn btn-success">計算</button>
+        </form>
+        <hr>
+        
+        <div>
+        結果: <span ng-bind="result.zcr"></span>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var transform = function(data) {
+        return $.param(data);
+    }
+
+    var zcrModule = angular.module('ZcrCalculator', []);
+
+    zcrModule.controller('FormController', function($scope, $http) {
+        $scope.result = { 
+            "zcr" : 0
+        };
+
+        $scope.send_url = function(formzcr) {
+            //var csrfToken = $("input[name='csrf_token']")[0].value;
+            var reqParam = { 
+                "url"           : formzcr.url
+                //"csrf_token"    : csrfToken
+            };
+            console.log(reqParam);
+            $http.post('/get_zcr', reqParam, {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                transformRequest: transform
+            }).success( function(data, status, headers, config) {
+                $scope.result = data;
+                console.log($scope.result.zcr);
+            });
+        };
+    });
+
+</script>
+
+: }
+

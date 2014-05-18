@@ -8,9 +8,16 @@ use Teng::Schema::Declare;
 base_row_class 'ZCR::DB::Row';
 
 table {
-    name 'member';
+    name 'site';
     pk 'id';
     columns qw(id name);
 };
+
+table {
+    name 'zcr';
+    pk 'id';
+    columns qw(id site_id audio_id zcr);
+};
+
 
 1;
