@@ -29,17 +29,26 @@ any '/' => sub {
 
 post '/get_zcr' => sub {
     my ($c) = @_;
-    $c->db->{dbh}->do(q{SET NAMES UTF8});
-
-    my $url = $c->req->param('url');
-    debugf("URL: $url");
-
     my $res = {};
-    if ( is_youtube_url($url) ) {
-        $res = get_zcr_from_youtube($c, $url);
+
+    eval {
+        $c->db->{dbh}->do(q{SET NAMES UTF8});
+
+        my $url = $c->req->param('url');
+        debugf("URL: $url");
+
+        if ( is_youtube_url($url) ) {
+            $res = get_zcr_from_youtube($c, $url);
+        }
+        elsif ( is_terminal_url($url) ) {
+            $res = get_zcr_from_terminal($c, $url);
+        }
+    };
+    if ($@) {
+        $res = { error => 1 };
     }
-    elsif ( is_terminal_url($url) ) {
-        $res = get_zcr_from_terminal($c, $url);
+    unless ( $res->{zcr} ) {
+        $res = { error => 1 };
     }
 
     return $c->render_json($res);

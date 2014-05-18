@@ -20,7 +20,13 @@
             <button ng-click="send_url(formzcr)" class="btn btn-success">計算</button>
         </form>
         <hr>
-        
+
+        <div ng-show="result.error">
+            <strong style="color: #f33">エラーが発生しました。URLが正しいか確認してください</strong> 
+        </div>        
+        <div ng-show="processing">
+            <strong style="color: #33c">解析中...</strong> 
+        </div>        
         <div ng-show="result.zcr">
             <div>
                 <h4>結果</h4> 
@@ -78,8 +84,10 @@
             "image_url" : "",
             "title"     : ""
         };
+        $scope.processing = 0;
 
         $scope.send_url = function(formzcr) {
+            $scope.processing = 1;
             var csrfToken = $("input[name='csrf_token']")[0].value;
             var reqParam = { 
                 "url"           : formzcr.url,
@@ -92,6 +100,9 @@
             }).success( function(data, status, headers, config) {
                 $scope.result = data;
                 console.log($scope.result);
+                $scope.processing = 0;
+            }).error( function(data, status, headers, config) {
+                $scope.processing = 0;
             });
         };
     });
