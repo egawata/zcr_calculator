@@ -27,7 +27,7 @@
                 <div>{{result.title}}</div>
                 <div>
                     <a href="{{result.link_url}}" target="_blank">
-                        <img src="{{result.image_url}}">
+                        <img src="{{result.image_url}}" width="120">
                     </a>
                 </div>
                 <div>
@@ -39,7 +39,7 @@
                 <h4>ZCRが近い曲</h4>
             </div>
             <div>
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <td></td>
@@ -51,11 +51,11 @@
                         <tr ng-repeat="song in result.resembles">
                             <td>
                                 <a href="{{song.link_url}}" target="_blank">
-                                    <img src="{{song.image_url}}">
+                                    <img src="{{song.image_url}}" width="120">
                                 </a>
                             </td>
                             <td>{{song.title}}</td>
-                            <td>{{song.zcr}}</td>
+                            <td>{{song.zcr | number}}</td>
                         </tr>
                     </tbody>
                 </table>
