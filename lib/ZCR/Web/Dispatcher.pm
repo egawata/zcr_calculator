@@ -56,6 +56,43 @@ post '/get_zcr' => sub {
 };
 
 
+post '/get_recent' => sub {
+    my ($c) = @_;
+    
+    my @songs = ();
+    eval {
+        $c->db->{dbh}->do(q{SET NAMES UTF8});
+
+        my @rows = $c->db->search('zcr' => {}, { 
+            order_by    => 'id desc', 
+            limit       => 10,
+        });
+
+        for my $row (@rows) {
+            push @songs, {
+                zcr         => $row->zcr,
+                video_id    => $row->audio_id,
+                image_url   => $row->image_url,
+                link_url    => get_link_url($row->site_id, $row->audio_id, $row->title),
+                title       => decode_utf8($row->title),
+            };
+        }
+
+    };
+    if ($@) {
+        warnf($@);
+        return $c->render_json({ error => 1 });
+    }
+        
+    debugf("Success");
+    my $res = { 
+        recent_songs => [ @songs ],
+    };
+    
+    return $c->render_json($res);
+};
+
+
 sub is_youtube_url {
     my ($url) = @_;
 
@@ -286,6 +323,7 @@ sub get_link_url {
     
     return undef;
 }
+
 
 
 
