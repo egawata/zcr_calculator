@@ -87,7 +87,7 @@ sub get_zcr_from_youtube {
             video_id    => $video_id,
             title       => decode_utf8($row->title),
             image_url   => $row->image_url,
-            link_url    => get_link_url(SITE_ID_YOUTUBE, $video_id),
+            link_url    => get_link_url(SITE_ID_YOUTUBE, $video_id, $row->title),
             resembles   => get_resemble_songs($c, $row->id, $row->zcr),
         };
     }
@@ -185,7 +185,7 @@ sub get_zcr_from_terminal {
                 zcr         => $rec->zcr,
                 title       => decode_utf8($rec->title),
                 image_url   => $rec->image_url,
-                link_url    => get_link_url(SITE_ID_TERMINAL, $audio_id),
+                link_url    => get_link_url(SITE_ID_TERMINAL, $audio_id, $rec->title),
                 resembles   => get_resemble_songs($c, $rec->id, $rec->zcr),
             };
         }
@@ -208,7 +208,7 @@ sub get_zcr_from_terminal {
             zcr         => $zcr,
             title       => decode_utf8($scraped->{title}),
             image_url   => $scraped->{image_url},
-            link_url    => get_link_url(SITE_ID_TERMINAL, $audio_id),
+            link_url    => get_link_url(SITE_ID_TERMINAL, $audio_id, $scraped->{title}),
             resembles   => get_resemble_songs($c, 0, $zcr),
         );
 
@@ -263,7 +263,7 @@ sub get_resemble_songs {
             zcr         => $row->zcr,
             video_id    => $row->audio_id,
             image_url   => $row->image_url,
-            link_url    => get_link_url($row->site_id, $row->audio_id),
+            link_url    => get_link_url($row->site_id, $row->audio_id, $row->title),
             title       => decode_utf8($row->title),
         };
     }
@@ -273,13 +273,13 @@ sub get_resemble_songs {
 
 
 sub get_link_url {
-    my ($site_id, $audio_id) = @_;
+    my ($site_id, $audio_id, $title) = @_;
 
     if ( $site_id == SITE_ID_YOUTUBE ) {
         return "https://www.youtube.com/watch?v=$audio_id";
     }
     elsif ( $site_id == SITE_ID_TERMINAL ) {
-        return "http://mp3-terminal.com/s/$audio_id/";
+        return "http://mp3-terminal.com/mp3_" . decode_utf8($title) . "/";
     }
     
     return undef;
