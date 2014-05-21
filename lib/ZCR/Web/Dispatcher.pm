@@ -45,6 +45,7 @@ post '/get_zcr' => sub {
         }
     };
     if ($@) {
+        warnf($@);
         $res = { error => 1 };
     }
     unless ( $res->{zcr} ) {
@@ -114,13 +115,14 @@ sub get_zcr_from_youtube {
             my $json = decode_json($http_res->content);
             my $snippet = $json->{items}->[0]->{snippet};
 
+            my $zcr = get_zcr($wavfile);
             %res = (
-                zcr         => get_zcr($wavfile),
+                zcr         => $zcr,
                 video_id    => $video_id,
                 image_url   => $snippet->{thumbnails}{default}{url},
                 link_url    => 'https://www.youtube.com/watch?v=' . $video_id,
                 title       => $snippet->{title},
-                resembles   => get_resemble_songs($c, 0, $res{zcr}),
+                resembles   => get_resemble_songs($c, 0, $zcr),
             );
 
             if ( $res{title} ) {
@@ -196,9 +198,9 @@ sub get_zcr_from_terminal {
         debugf("MP3 file : $mp3_file");
 
         system('wget', '-O', $mp3_file, $mp3_url) == 0 
-            or die "Failed to wget mp3 file from $mp3_url";
+            or critf("Failed to wget mp3 file from $mp3_url");
         system('lame', '--decode', $mp3_file, $wav_file) == 0
-            or die "Failed to convert $mp3_file to $wav_file";
+            or critf("Failed to convert $mp3_file to $wav_file");
 
         my $zcr = get_zcr($wav_file);
         unlink $mp3_file;
