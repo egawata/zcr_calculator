@@ -6,15 +6,22 @@
 <div ng-app="ZcrCalculator">
     <div>
         <p>
-            楽曲のZCR(Zero Crossing Rate)を計算します。以下のサイトのURLが有効です。
+            楽曲のZCR(Zero Crossing Rate)を計算します。
+        </p>
+        <p>
+            ZCRは音声の特徴を表す指標の一つで、音声がどれだけ percussive、もしくは noisy かを数値で表します。値が大きいほどより percussive, noisy と考えられます。
+            このサイトの計算方法では、おおよそ 1.0 から 6.0 の間くらいに収まります。
+        </p>
+        <p>
+            以下のサイトのURLが有効です。
         </p>
         <ul>
-            <li><a href="https://www.youtube.com/">YouTube</a> (https://www.youtube.com/watch?v=...)</li>
-            <li><a href="http://mp3-terminal.com/">Terminal MP3 Download</a> (http://mp3-terminal.com/mp3_.../)</li>
+            <li><a href="https://www.youtube.com/">YouTube</a> の再生ページ (https://www.youtube.com/watch?v=...)</li>
+            <li><a href="http://mp3-terminal.com/">Terminal MP3 Download</a> の単曲ページ(http://mp3-terminal.com/mp3_.../)</li>
         </ul>
     </div>
     <div>
-        また、ZCRが近い楽曲を5曲表示します。もしかしたら似ている曲が見つかるかもしれません。
+        また、ZCRが近い楽曲を10曲表示します。もしかしたらあなたの好きな曲に似ている曲が見つかるかもしれません。
     </div>
     <hr>
     <div ng-controller="FormController">

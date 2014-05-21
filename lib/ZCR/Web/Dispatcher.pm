@@ -295,7 +295,7 @@ sub get_resemble_songs {
          WHERE id != ?
       ORDER BY abs(? - zcr)
          LIMIT ?
-    }, [ $id, $zcr, 5 ]);
+    }, [ $id, $zcr, 10 ]);
 
     for my $row (@rows) {
         push @songs, {
